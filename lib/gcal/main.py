@@ -1,5 +1,5 @@
-import os.path
 import datetime
+import os.path
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -12,6 +12,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 
 def get_events():
+    print("in file")
     """Shows basic usage of the Google Calendar API.
     Prints the start and name of the next 10 events on the user's calendar.
     """
@@ -21,6 +22,8 @@ def get_events():
     # time.
     if os.path.exists('cred/token.json'):
         creds = Credentials.from_authorized_user_file('cred/token.json', SCOPES)
+
+    print(creds)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
@@ -52,3 +55,7 @@ def get_events():
 
     except HttpError as error:
         print('An error occurred: %s' % error)
+
+
+if __name__ == '__main__':
+    get_events()
