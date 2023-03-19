@@ -1,4 +1,4 @@
-![](./docs/img/logo.png "eInk Calendar"){:height="36px" width="36px"}
+![](./docs/img/logo.png "eInk Calendar")
 # urbanista
 
 

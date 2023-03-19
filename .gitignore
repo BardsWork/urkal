@@ -134,4 +134,4 @@ dmypy.json
 events.json
 
 # CREDENTIALS FOR GOOGLE API
-cred/token.json
+/lib/gcal/cred/token.json
