@@ -1,8 +1,8 @@
 <!-- PROJECT LOGO -->
-# Urkal
+# Urkal - a simple e-ink display for Google Calendar
 <div align="center">
-  <a href="https://github.com/BardsWork/bsm-sheets">
-    <img src="docs/img/logo.png" alt="Logo" width="512" height="512">
+  <a href="https://github.com/BardsWork/urkal">
+    <img src="docs/img/calendar.jpeg" alt="Logo" width="425" height="512">
   </a>
   <p>An eInk calendar/planner written for raspberry pi zero &amp; waveshare 800x480 display.</p>
 </div>
