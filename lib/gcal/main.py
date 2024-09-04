@@ -1,45 +1,38 @@
+import os
 import datetime
-import os.path
-
-from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file token.json.
+# Define the scopes for the Google Calendar API
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
-
-def get_events():
-    print("in file")
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
+def get_calendar_events():
+    """Retrieves the next 10 events from the user's Google Calendar."""
     creds = None
-    # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
-    if os.path.exists('cred/token.json'):
-        creds = Credentials.from_authorized_user_file('cred/token.json', SCOPES)
+    token_path = os.path.join(os.path.dirname(__file__), 'token.json')
+    credentials_path = os.path.join(os.path.dirname(__file__), 'credentials.json')
 
-    print(creds)
-    # If there are no (valid) credentials available, let the user log in.
+    # Load the credentials from the token.json file
+    if os.path.exists(token_path):
+        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+
+    # If no valid credentials are found, log the user in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                './cred/credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(credentials_path, SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('cred/token.json', 'w') as token:
-            token.write(creds.to_json())
+        with open(token_path, 'w') as token_file:
+            token_file.write(creds.to_json())
 
     try:
         service = build('calendar', 'v3', credentials=creds)
 
-        # Call the Calendar API
+        # Call the Calendar API to fetch events
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
         print('Getting the upcoming 10 events')
         events_result = service.events().list(calendarId='primary', timeMin=now,
@@ -49,13 +42,16 @@ def get_events():
 
         if not events:
             print('No upcoming events found.')
-            return
+            return []
+        else:
+            for event in events:
+                start = event['start'].get('dateTime', event['start'].get('date'))
+                print(f"{start}: {event['summary']}")
+            return events
 
-        return events
-
-    except HttpError as error:
-        print('An error occurred: %s' % error)
-
+    except Exception as error:
+        print(f'An error occurred: {error}')
+        return []
 
 if __name__ == '__main__':
-    get_events()
+    get_calendar_events()

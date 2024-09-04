@@ -1,0 +1,12 @@
+{
+    "displayToMonitor": false,
+    "thresholdHours": 24,
+    "maxEventsPerDay": 3,
+    "weekStartDay": 6,
+    "screenWidth": 800,
+    "screenHeight": 480,
+    "is24h": false,
+    "calendars": [
+      "primary"
+    ]
+  }
