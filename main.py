@@ -37,15 +37,17 @@ def main():
     tomorrows_events = []
     day_after_events = []
 
-    # PIL SETUP
+    # PIL Setup
     Himage = Image.new('1', (screen_width, screen_height), 255)
     draw = ImageDraw.Draw(Himage)
 
-    # CALENDAR SETUP
+    # Calendar configuration
     calendar.setfirstweekday(week_start_day)
     calendar_days = calendar.monthcalendar(today.year, today.month)
 
-    # Controlls for the left side of the calendar display
+    # ----------------------------------------------------
+    # Draw the mini monthly calendar on the left side.
+    # ----------------------------------------------------
     draw.text(
         xy=(130, 40),
         text=today.strftime("%B"),
@@ -69,7 +71,7 @@ def main():
             align="center"
         )
 
-    # PRINT CALENDAR MONTH
+    # Print monthly calendar on the left hand side.
     for row in calendar_days:
         x = 12
         y += 30
@@ -97,7 +99,7 @@ def main():
                 )
 
     # ----------------------------------------------------
-    # THIS IS THE START OF THE DAY-PLANNER (LEFT) SECTION
+    # THIS IS THE START OF THE DAY-PLANNER (RIGHT) SECTION
     # ----------------------------------------------------
 
     # Current day     

@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 def get_calendar_events():
-    """Retrieves the next 10 events from the user's Google Calendar."""
+    """Retrieves the next 10 events from your Google Calendar."""
     creds = None
     token_path = os.path.join(os.path.dirname(__file__), 'token.json')
     credentials_path = os.path.join(os.path.dirname(__file__), 'credentials.json')
