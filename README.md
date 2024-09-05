@@ -13,6 +13,8 @@
 
 - [Raspberry Pi Zero WH](https://www.raspberrypi.org/blog/zero-wh/) - Header pins are needed to connect to the E-Ink display
 - [Waveshare 7.5" Tri-color E-Ink Display](https://www.waveshare.com/product/raspberry-pi/displays/e-paper/7.5inch-e-paper-hat-b.htm?___SID=U) - Black & white display is sufficient but newer displays are tri-colored.
+- [3d Printed Case](www.thingiverse.com/thing:4807262) - The specific case I've used. STL can be found in `./docs/stl`
+- 
 
 
 ## Setting Up Raspberry Pi Zero
@@ -52,7 +54,7 @@ curl http://cdn.pisugar.com/release/Pisugar-power-manager.sh | sudo bash
 
 6. Download the over the files in this repo to a folder in your PC first. 
 
-7. In order for you to access your Google Calendar events, it's necessary to first grant the access. Follow the [instructions here](https://developers.google.com/calendar/api/quickstart/python) on your PC to get the credentials.json file from your Google API. Don't worry, take your time. I'll be waiting here.
+7. In order for you to access your Google Calendar events, it's necessary to first grant the access. Follow the [instructions here](https://developers.google.com/calendar/api/quickstart/python) on your PC to get the credentials.json file from your Google API. 
 
 8. Once done, copy the credentials.json file to the "gcal" folder in this project. Run the following command on your PC. A web browser should appear, asking you to grant access to your calendar. Once done, you should see a "token.pickle" file in your "gcal" folder.
 
