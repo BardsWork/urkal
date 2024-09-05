@@ -1,13 +1,11 @@
 from __future__ import print_function
-
 from PIL import Image, ImageDraw, ImageFont
-
-#from lib.waveshare import epd7in5_V2
 from lib.gcal.main import get_calendar_events
 
+import os
+import json
 import datetime
 import calendar
-import json
 
 def main():
     # Basic configuration settings (user replaceable)
@@ -18,17 +16,20 @@ def main():
     screen_width = config['screenWidth']  # Width of E-Ink display. Default is landscape. 
     screen_height = config['screenHeight']  # Height of E-Ink display. Default is landscape. 
     week_start_day = config['weekStartDay']  # Monday = 0, Sunday = 6
-    display_to_monitor = config['displayToMonitor']  # If TRUE, will display on dev machine instead of drawing on e-ink
+    development = config['development']  # If TRUE, waveshare library is not loaded and no e-ink display is present.
 
     # E-paper part
-    # if display_to_monitor == False:
-    #     epd = epd7in5_V2.EPD()
-    #     epd.init()
-    #     epd.Clear()
+    if development == False:
+        from lib.waveshare import epd7in5_V2
+        
+        epd = epd7in5_V2.EPD()
+        epd.init()
+        epd.Clear()
 
     # Configure font
-    text_font = ImageFont.truetype("font.ttc", 18)
-    heading_font = ImageFont.truetype("font.ttc", 36)
+    font_path = os.path.join(os.path.dirname(__file__), 'lib', 'fonts', 'font.ttc')
+    text_font = ImageFont.truetype(font_path, 18)
+    heading_font = ImageFont.truetype(font_path, 36)
 
     # Variables
     today = datetime.date.today()
@@ -172,15 +173,13 @@ def main():
                         draw.text((_x + 25, _y), event['summary'][:100], font=text_font)
                     else:
                         day_after_events.append(event)
-
-    Himage.show()
     
     # Display buffer on the screen
-    # if display_to_monitor == False:
-    #     epd.display(epd.getbuffer(Himage))
-    #     epd.sleep()
-    # else: 
-    #     Himage.show()
+    if development == False:
+        epd.display(epd.getbuffer(Himage))
+        epd.sleep()
+    else: 
+        Himage.show()
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 {
-    "displayToMonitor": false,
+    "development": true,
     "thresholdHours": 24,
     "maxEventsPerDay": 3,
     "weekStartDay": 6,
