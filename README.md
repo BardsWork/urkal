@@ -12,7 +12,7 @@
 ## Hardware Required
 
 - [Raspberry Pi Zero WH](https://www.raspberrypi.org/blog/zero-wh/) - Header pins are needed to connect to the E-Ink display
-- [Waveshare 7.5" Tri-color E-Ink Display](https://www.waveshare.com/product/raspberry-pi/displays/e-paper/7.5inch-e-paper-hat-b.htm?___SID=U) - Black & white display is sufficient but newer displays are tri-colored.
+- [Waveshare 7.5" Tri-color E-Ink Display](https://www.waveshare.com/7.5inch-e-paper-hat.htm) - 800×480, 7.5inch E-Ink display HAT for Raspberry Pi.
 - [3d Printed Case](www.thingiverse.com/thing:4807262) - The specific case I've used. STL can be found in `./docs/stl`
 - 
 
