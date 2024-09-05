@@ -7,38 +7,40 @@ import json
 import datetime
 import calendar
 
-def main():
-    # Basic configuration settings (user replaceable)
-    configFile = open('config.json')
-    config = json.load(configFile)
-    
-    # Load configuration variables.
-    screen_width = config['screenWidth']  # Width of E-Ink display. Default is landscape. 
-    screen_height = config['screenHeight']  # Height of E-Ink display. Default is landscape. 
-    week_start_day = config['weekStartDay']  # Monday = 0, Sunday = 6
-    development = config['development']  # If TRUE, waveshare library is not loaded and no e-ink display is present.
 
-    # E-paper part
-    if development == False:
+def main():
+    """Main function to render calendar and events on an e-ink display."""
+
+    # Load configuration settings
+    with open('config.json') as config_file:
+        config = json.load(config_file)
+    
+    # Configuration variables
+    screen_width = config['screenWidth']  # E-Ink display width (landscape)
+    screen_height = config['screenHeight']  # E-Ink display height (landscape)
+    week_start_day = config['weekStartDay']  # Monday = 0, Sunday = 6
+    development_mode = config['development']  # Development mode disables the e-ink display
+
+    # E-paper setup
+    if not development_mode:
         from lib.waveshare import epd7in5_V2
-        
         epd = epd7in5_V2.EPD()
         epd.init()
         epd.Clear()
 
-    # Configure font
+    # Configure fonts
     font_path = os.path.join(os.path.dirname(__file__), 'lib', 'fonts', 'font.ttc')
     text_font = ImageFont.truetype(font_path, 18)
     heading_font = ImageFont.truetype(font_path, 36)
 
-    # Variables
+    # Date variables
     today = datetime.date.today()
-    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    todays_event_cnt = 0
+    tomorrow = today + datetime.timedelta(days=1)
+    todays_event_count = 0
     tomorrows_events = []
     day_after_events = []
 
-    # PIL Setup
+    # PIL setup for image buffer
     Himage = Image.new('1', (screen_width, screen_height), 255)
     draw = ImageDraw.Draw(Himage)
 
@@ -46,9 +48,7 @@ def main():
     calendar.setfirstweekday(week_start_day)
     calendar_days = calendar.monthcalendar(today.year, today.month)
 
-    # ----------------------------------------------------
-    # Draw the mini monthly calendar on the left side.
-    # ----------------------------------------------------
+    # Draw mini monthly calendar on the left side
     draw.text(
         xy=(130, 40),
         text=today.strftime("%B"),
@@ -57,10 +57,11 @@ def main():
         align="center"
     )
 
-    # POSITIONING OF FIRST ELEMENT
+    # Positioning of first element
     x = 12
     y = 100
 
+    # Display days of the week
     days_of_week = calendar.day_abbr[-1:] + calendar.day_abbr[:-1]
     for day in days_of_week:
         x += 30
@@ -72,7 +73,7 @@ def main():
             align="center"
         )
 
-    # Print monthly calendar on the left hand side.
+    # Display monthly calendar
     for row in calendar_days:
         x = 12
         y += 30
@@ -80,7 +81,7 @@ def main():
             x += 30
             if day == 0:
                 continue
-            if int(datetime.date.today().strftime("%d")) == day:
+            if int(today.strftime("%d")) == day:
                 draw.rounded_rectangle(((x - 16, y - 13), (x + 15, y + 12)), radius=4, fill=0)
                 draw.text(
                     xy=(x, y),
@@ -99,11 +100,7 @@ def main():
                     align="center"
                 )
 
-    # ----------------------------------------------------
-    # THIS IS THE START OF THE DAY-PLANNER (RIGHT) SECTION
-    # ----------------------------------------------------
-
-    # Current day     
+    # Start day planner (right section)
     draw.text(
         xy=(510, 40),
         text=today.strftime("%A"),
@@ -112,55 +109,55 @@ def main():
         align="center"
     )
 
-    x = 400  # start position on x-axis of event panel (right)
-    y = 50  # start position on y-axis of event panel (right)
-   
-    # Loop trough calendar events and draw them to buffer
-    events = get_calendar_events()  # retrieves events from google calendar API
+    x = 400  # X-axis start position for event panel
+    y = 50  # Y-axis start position for event panel
+
+    # Retrieve and display events
+    events = get_calendar_events()
     for event in events:
         start = event['start'].get('dateTime', event['start'].get('date'))
         end = event['end'].get('dateTime', event['end'].get('date'))
 
-        if len(start) == 10:  # events that are 'whole day'-events
-            startdate = datetime.datetime.strptime(start, "%Y-%m-%d")
-            enddate = datetime.datetime.strptime(end, "%Y-%m-%d")
+        if len(start) == 10:  # Whole-day events
+            start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
+            end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
             time = ''
-        if len(start) == 25:  # events that start at specific time
-            startdate = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
-            enddate = datetime.datetime.strptime(end, "%Y-%m-%dT%H:%M:%S%z")
-            time = startdate.strftime("%I:%M-") + enddate.strftime("%I:%M %p")
+        elif len(start) == 25:  # Timed events
+            start_date = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
+            end_date = datetime.datetime.strptime(end, "%Y-%m-%dT%H:%M:%S%z")
+            time = start_date.strftime("%I:%M-") + end_date.strftime("%I:%M %p")
 
-            if startdate.date() == today:
-                todays_event_cnt += 1
+            if start_date.date() == today:
+                todays_event_count += 1
                 y += 40
                 draw.text((x - 120, y), time, font=text_font)
                 draw.text((x + 25, y), event['summary'], font=text_font)
-            elif (startdate.date() == tomorrow):
+            elif start_date.date() == tomorrow:
                 tomorrows_events.append(event)
 
-    if (todays_event_cnt < 2):
-
-        if (todays_event_cnt == 0):
+    # Handle case when there are fewer than two events today
+    if todays_event_count < 2:
+        if todays_event_count == 0:
             draw.text((325, 75), "There are no more events scheduled for today.", font=text_font)
 
-        if (len(tomorrows_events) > 0):
-            _x = 400  # start position on x-axis of events on e-ink screen
-            _y = 150  # start position on y-axis of events on e-ink screen
+        if tomorrows_events:
+            _x = 400  # X-axis start for tomorrow's events
+            _y = 150  # Y-axis start for tomorrow's events
             for event in events:
                 start = event['start'].get('dateTime', event['start'].get('date'))
                 end = event['end'].get('dateTime', event['end'].get('date'))
 
-                if len(start) == 10:  # events that are 'whole day'-events
-                    startdate = datetime.datetime.strptime(start, "%Y-%m-%d")
-                    enddate = datetime.datetime.strptime(end, "%Y-%m-%d")
+                if len(start) == 10:
+                    start_date = datetime.datetime.strptime(start, "%Y-%m-%d")
+                    end_date = datetime.datetime.strptime(end, "%Y-%m-%d")
                     time = ''
-                if len(start) == 25:  # events that start at specific time
-                    startdate = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
-                    enddate = datetime.datetime.strptime(end, "%Y-%m-%dT%H:%M:%S%z")
-                    time = startdate.strftime("%I:%M-") + enddate.strftime("%I:%M %p")
+                elif len(start) == 25:
+                    start_date = datetime.datetime.strptime(start, "%Y-%m-%dT%H:%M:%S%z")
+                    end_date = datetime.datetime.strptime(end, "%Y-%m-%dT%H:%M:%S%z")
+                    time = start_date.strftime("%I:%M-") + end_date.strftime("%I:%M %p")
 
-                    if startdate.date() == tomorrow:
-                        # Tomorrow's day Name
+                    if start_date.date() == tomorrow:
+                        # Display tomorrow's day name
                         draw.text(
                             xy=(510, 150),
                             text=tomorrow.strftime("%A"),
@@ -173,12 +170,12 @@ def main():
                         draw.text((_x + 25, _y), event['summary'][:100], font=text_font)
                     else:
                         day_after_events.append(event)
-    
+
     # Display buffer on the screen
-    if development == False:
+    if not development_mode:
         epd.display(epd.getbuffer(Himage))
         epd.sleep()
-    else: 
+    else:
         Himage.show()
 
 
