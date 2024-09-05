@@ -26,7 +26,7 @@ def main():
         from lib.waveshare import epd7in5_V2
         epd = epd7in5_V2.EPD()
         epd.init()
-        epd.Clear()
+        epd.Clear() # Clear MUST be used to prevent physically breaking the e-ink display.
 
     # Configure fonts
     font_path = os.path.join(os.path.dirname(__file__), 'lib', 'fonts', 'font.ttc')
