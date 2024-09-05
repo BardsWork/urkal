@@ -14,6 +14,7 @@ SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 def main():
   """Shows basic usage of the Google Calendar API.
   Prints the start and name of the next 10 events on the user's calendar.
+  This is an exact copy from the quickstart.py file from Google tutorial.
   """
   creds = None
   # The file token.json stores the user's access and refresh tokens, and is

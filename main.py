@@ -21,12 +21,12 @@ def main():
     week_start_day = config['weekStartDay']  # Monday = 0, Sunday = 6
     development_mode = config['development']  # Development mode disables the e-ink display
 
-    # E-paper setup
+    # Waveshare library initialization & setup.
     if not development_mode:
         from lib.waveshare import epd7in5_V2
         epd = epd7in5_V2.EPD()
         epd.init()
-        epd.Clear() # Clear MUST be used to prevent physically breaking the e-ink display.
+        epd.Clear()
 
     # Configure fonts
     font_path = os.path.join(os.path.dirname(__file__), 'lib', 'fonts', 'font.ttc')
@@ -57,7 +57,7 @@ def main():
         align="center"
     )
 
-    # Positioning of first element
+    # The positioning for abreviations of the days of the week for the mini cal.
     x = 12
     y = 100
 
@@ -73,7 +73,7 @@ def main():
             align="center"
         )
 
-    # Display monthly calendar
+    # Display monthly calendar days (1 - 31)
     for row in calendar_days:
         x = 12
         y += 30
@@ -100,7 +100,7 @@ def main():
                     align="center"
                 )
 
-    # Start day planner (right section)
+    # Daily events section (right hand side)
     draw.text(
         xy=(510, 40),
         text=today.strftime("%A"),
@@ -109,8 +109,8 @@ def main():
         align="center"
     )
 
-    x = 400  # X-axis start position for event panel
-    y = 50  # Y-axis start position for event panel
+    x = 400  # X-axis start position for the event panel
+    y = 50  # Y-axis start position for the event panel
 
     # Retrieve and display events
     events = get_calendar_events()
@@ -174,7 +174,7 @@ def main():
     # Display buffer on the screen
     if not development_mode:
         epd.display(epd.getbuffer(Himage))
-        epd.sleep()
+        epd.sleep() # sleep MUST be used to prevent physically damaging e-ink display.
     else:
         Himage.show()
 
