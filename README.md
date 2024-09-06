@@ -1,4 +1,3 @@
-<!-- PROJECT LOGO -->
 # Urkal - a simple e-ink display for Google Calendar
 <div align="center">
   <a href="https://github.com/BardsWork/urkal">
@@ -48,6 +47,7 @@ sudo apt-get install wiringpi
 ```
 
 ## Generating `token.json` to access Google Calendar
+
 1. `git clone`, or download, the project files to your computer.
 
 2. In order for you to access your Google Calendar events, it's necessary to first grant access and generate a `token.json` file. Follow the [instructions here](https://developers.google.com/calendar/api/quickstart/python). The `quickstart.py` from the tutorial is duplicated as `./lib/gcal/auth.py` for your convenience.
@@ -55,6 +55,7 @@ sudo apt-get install wiringpi
 3. Once you run `auth.py`, a `token.json` file will be generated that is used to authenticate the API requests and retrieve calendar events.
 
 ## Setup RPI to display calendar
+
 1. Copy all the files over to your RPi using your preferred means. 
 
 2. Run the following command in the RPi Terminal to open crontab.
