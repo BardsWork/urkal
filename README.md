@@ -64,7 +64,6 @@ sudo pip3 install RPi.GPIO
 
 
 ## Enabling Google Calendar Integration
-
 1. `git clone https://github.com/BardsWork/urkal`, or download the project files to your computer.
 
 2. To access your Google Calendar events, you need to grant access and generate a `token.json` file. Follow the 
