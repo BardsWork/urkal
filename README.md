@@ -81,7 +81,7 @@ Place the `token.json` file in the `./lib/gcal` folder. This step has to be perf
 > `./lib/gcal/token.json` and `./lib/gcal/credentials.json` paths have been added to `.gitignore`. If you change the location, 
 update the file to avoid committing sensitive information to a public repository.
 
-4. Install the project dependencies via `pip3 install requirements.txt`.
+4. Install the project dependencies via `pip3 install -r requirements.txt`.
 
 
 ## Setup RPI to display calendar
