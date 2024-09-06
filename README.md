@@ -40,7 +40,7 @@ If you don't have access to a 3D printer, cases are available from Amazon, DigiK
 
 ### Preparing the SD Card with Raspberry Pi OS
 If your SD card doesn't already have the Raspberry Pi OS or if you want to reset your Raspberry Pi, you can easily install Raspberry Pi OS yourself. 
-he official documentation is easy to follow for flashing the OS onto your SD card.
+The official documentation is easy to follow for flashing the OS onto your SD card.
 
   > [Setting up your Raspberry Pi Official Documentation](https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up/2)
 
@@ -60,7 +60,8 @@ sudo pip3 install spidev
 sudo pip3 install RPi.GPIO
 ```
 
-> `spidev` and `RPi.GPIO` are not part of the requirements.txt file and must be installed manually. They require a Linux environment, so the installation will fail under development mode in Windows or MacOS.
+> `spidev` and `RPi.GPIO` are not part of the requirements.txt file and must be installed manually. They require a Linux environment, so the installation will fail in Windows or MacOS, 
+unless development mode is enabled in enabled in `config.json`.
 
 
 ## Enabling Google Calendar Integration
@@ -75,11 +76,12 @@ sudo pip3 install RPi.GPIO
 `token.json` file.
 
 3. Once you run `auth.py`, a `token.json` file will be generated to authenticate the API requests and retrieve calendar events.
-Place the `token.json` file in the `./lib/gcal` folder. 
+Place the `token.json` file in the `./lib/gcal` folder. This step has to be performed on a local machine with access to a web browser.
 
 > `./lib/gcal/token.json` and `./lib/gcal/credentials.json` paths have been added to `.gitignore`. If you change the location, 
 update the file to avoid committing sensitive information to a public repository.
 
+4. Install the project dependencies via `pip3 install requirements.txt`.
 
 
 ## Setup RPI to display calendar
